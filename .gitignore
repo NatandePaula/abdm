@@ -1,0 +1,16 @@
+/config/config.local.php
+/vendor/
+/composer.phar
+/.phpunit.result.cache
+/.phpunit.cache/
+/.env
+/.env.*
+!/.env.example
+/SQL Banco.sql
+/Dump*.sql
+/database/*.sql
+!/database/esquema_demonstrativo.sql
+!/database/migracao_gotas_por_ml.sql
+*.log
+*.bak
+*.orig

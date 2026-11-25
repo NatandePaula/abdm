@@ -1,0 +1,126 @@
+@media print {
+    @page {
+        size: A4;
+        margin: 1cm 1.5cm; /* Margens padrão para o conteúdo */
+    }
+
+    html, body { 
+        background-color: #fff !important; 
+        margin: 0;
+        height: auto !important;
+        overflow: visible !important;
+        font-size: 10pt;
+        color: #000 !important;
+        font-family: 'Times New Roman', Times, serif;
+    }
+
+    /* Oculta elementos da interface do usuário que não devem ser impressos */
+    body > header, .d-print-none, .bd-mode-toggle, .dropdown, .btn, .modal {
+        display: none !important;
+    }
+
+    /* Força a exibição do bloco de impressão */
+    .d-print-block {
+        display: block !important;
+        visibility: visible !important;
+    }
+
+    /* Estrutura principal da tabela para cabeçalho/rodapé repetidos */
+    .print-main-layout {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .print-main-layout thead {
+        display: table-header-group;
+    }
+
+    .print-main-layout tfoot {
+        display: table-footer-group;
+    }
+
+    /* Zera estilos padrão das células de cabeçalho/rodapé */
+    .print-main-layout thead tr td,
+    .print-main-layout tfoot tr td {
+        padding: 0;
+        border: none;
+    }
+
+    .print-footer-spacer {
+        height: 100px;
+    }
+
+    /* Imagens do cabeçalho e rodapé dentro da tabela */
+    .print-header-img img, .print-footer-img img {
+        width: 100%;
+        max-height: 80px; /* Altura máxima para as imagens */
+        object-fit: contain; /* Mantém a proporção */
+        margin: 0 auto; /* Centraliza */
+        display: block; /* Garante que ocupe a largura total */
+    }
+    .print-footer-img {
+        padding-top: 15px; /* Espaço acima do rodapé */
+    }
+
+    /* Conteúdo do rodapé (texto) */
+    .footer-content {
+        text-align: center;
+        font-size: 8pt;
+        color: #555;
+        padding: 5px 0;
+    }
+
+    /* --- Estilos do Conteúdo (Genéricos) --- */
+    .print-main-title {
+        text-align: center;
+        font-size: 18pt;
+        font-weight: bold;
+        margin-bottom: 25px;
+    }
+
+    .print-section-title {
+        font-size: 14pt;
+        font-weight: bold;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #333;
+        padding-bottom: 5px;
+        page-break-after: avoid;
+        page-break-inside: avoid;
+    }
+
+    .print-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        page-break-inside: auto;
+        table-layout: fixed;
+        word-wrap: break-word;
+    }
+
+    .print-table th, .print-table td {
+        border: 1px solid #999;
+        padding: 6px 8px;
+        text-align: left;
+        vertical-align: top;
+        word-wrap: break-word; /* For legacy browsers */
+        overflow-wrap: break-word; /* Standard property */
+    }
+
+    .print-table th {
+        background-color: #f2f2f2;
+        width: 30%;
+        font-weight: bold;
+    }
+
+    /* Permite que as linhas da tabela quebrem entre páginas */
+    .print-table tr {
+        page-break-inside: auto !important;
+        page-break-after: auto !important;
+    }
+
+    /* Para elementos que devem ser mantidos juntos */
+    .page-break-avoid {
+        page-break-inside: avoid !important;
+    }
+}

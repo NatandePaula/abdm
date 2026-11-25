@@ -1,0 +1,12 @@
+DirectoryIndex index.php index.html
+Options -Indexes
+<FilesMatch "(?i)(\.(sql|phar|phps|log|bak|old|orig|swp)$|~$|^\.env|^\.(gitignore|htaccess|phpunit.*)$|^composer\.(json|lock)$|^phpunit\.xml$|^test-run-history$|^xls_conformidade_site_.*\.csv$|^(AUDITORIA|CORRECOES|VALIDACAO)_FINAL_TCC2\.md$|^REVISAO_COMPLEMENTAR_TCC2\.md$|^(CORRECOES_DEFINITIVAS|VALIDACAO_DEFINITIVA)_TCC2\.md$|^GUIA_MIGRACAO_ESTOQUE\.md$)">
+    Require all denied
+</FilesMatch>
+
+RewriteEngine On
+RewriteRule ^(?:config|database|resources|src|tests|vendor)(?:/|$) - [F]
+RewriteRule ^public(?:/|$) - [F]
+RewriteRule ^(?:acoes|controllers)/(controller[A-Z][a-zA-Z]+\.php)$ public/acoes/$1 [END]
+RewriteRule ^assets/([\s\S]+)$ public/assets/$1 [B,BNP,BNE=/,END]
+RewriteRule ^views/(imagens/[\s\S]+|CID-10-CATEGORIAS\.CSV|print_styles\.css)$ public/assets/$1 [B,BNP,BNE=/,END]
