@@ -61,11 +61,10 @@ final class EstoqueMedicamentos
             throw new InvalidArgumentException('A quantidade convertida excede o limite permitido.');
         }
 
-        // Preenche as colunas legadas obrigatórias de lote e validade.
         $stmt = $pdo->prepare(
             'INSERT INTO medicamentos_estoque '
-            . '(medicamento_id, lote, data_validade, quantidade_entrada, unidade_entrada, fator_conversao, quantidade_atual_base) '
-            . "VALUES (?, '', '9999-12-31', ?, ?, ?, ?)"
+            . '(medicamento_id, quantidade_entrada, unidade_entrada, fator_conversao, quantidade_atual_base) '
+            . 'VALUES (?, ?, ?, ?, ?)'
         );
         $stmt->execute([
             $medicamentoId,
@@ -369,6 +368,9 @@ final class EstoqueMedicamentos
         }
         if (!in_array($status, ['dispensado', 'recusado', 'nao_administrado'], true)) {
             throw new Exception('Status da dispensação inválido.');
+        }
+        if ($status === 'nao_administrado' && trim($observacao) === '') {
+            throw new Exception('Informe o motivo da não administração.');
         }
 
         $quantidade = $prescricao['quantidade_por_dose'];

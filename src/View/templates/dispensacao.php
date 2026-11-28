@@ -83,13 +83,21 @@ require_once ROOT_DIR . '/src/View/templates/includes/cabecalhoInterno.inc.php';
                                                         <?php foreach ($quadro_dispensacao[$horario][$acolhido['id']] as $item):
                                                             $presc = $item['prescricao'];
                                                             $disp = $item['dispensado'];
+                                                            $observacao = trim($disp['observacao'] ?? '');
+                                                            $cor = $disp ? ($disp['status'] === 'dispensado' ? ($observacao !== '' ? 'warning' : 'success') : 'danger') : 'light';
                                                         ?>
-                                                            <div class="mb-2 p-2 rounded border <?php echo $disp ? ($disp['status'] == 'dispensado' ? 'border-success' : 'border-danger') : 'border-light'; ?>">
+                                                            <div class="mb-2 p-2 rounded border border-<?php echo $cor; ?>">
                                                                 <div class="fw-bold"><?php echo htmlspecialchars($presc['nome_comercial']); ?></div>
                                                                 <small class="text-muted d-block"><?= htmlspecialchars(\Abdm\Model\HistoricoSaude::saudeFormatarDose($item['quantidade_por_dose'], $item['unidade_dose'])) ?></small>
                                                                 <?php if ($disp): ?>
-                                                                    <div class="mt-1 small badge <?php echo $disp['status'] == 'dispensado' ? 'text-bg-success' : 'text-bg-danger'; ?>">
-                                                                        <?php echo ucfirst($disp['status']); ?> às <?php echo date('H:i', strtotime($disp['horario_dispensado'])); ?>
+                                                                    <?php if ($observacao !== ''): ?>
+                                                                        <details class="mt-1">
+                                                                            <summary class="small">Ver <?php echo $disp['status'] === 'dispensado' ? 'observação' : 'motivo'; ?></summary>
+                                                                            <div class="small text-break"><?php echo nl2br(htmlspecialchars($observacao, ENT_QUOTES, 'UTF-8')); ?></div>
+                                                                        </details>
+                                                                    <?php endif; ?>
+                                                                    <div class="mt-1 small badge text-bg-<?php echo $cor; ?>">
+                                                                        <?php echo $disp['status'] === 'nao_administrado' ? 'Não administrado' : ucfirst($disp['status']); ?> às <?php echo date('H:i', strtotime($disp['horario_dispensado'])); ?>
                                                                         <br>por <?php echo htmlspecialchars($disp['nome_responsavel'] ?: $disp['usuario_responsavel'], ENT_QUOTES, 'UTF-8'); ?>
                                                                     </div>
                                                                 <?php else: ?>
@@ -158,7 +166,7 @@ require_once ROOT_DIR . '/src/View/templates/includes/cabecalhoInterno.inc.php';
             </div>
             <div class="mb-3">
                 <label for="observacao" class="form-label">Observação (opcional)</label>
-                <textarea class="form-control" name="observacao" rows="3"></textarea>
+                <textarea class="form-control" id="observacao" name="observacao" rows="3"></textarea>
             </div>
         </div>
         <div class="modal-footer">
@@ -199,6 +207,14 @@ require_once ROOT_DIR . '/src/View/templates/includes/cabecalhoInterno.inc.php';
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const dispensarModal = document.getElementById('dispensarModal');
+    const status = dispensarModal.querySelector('#status');
+    const observacao = dispensarModal.querySelector('#observacao');
+    const rotuloObservacao = dispensarModal.querySelector('label[for="observacao"]');
+    function atualizarCampoObservacao() {
+        observacao.required = status.value === 'nao_administrado';
+        rotuloObservacao.textContent = status.value === 'dispensado' ? 'Observação (opcional)' : (observacao.required ? 'Motivo (obrigatório)' : 'Motivo (opcional)');
+    }
+    status.addEventListener('change', atualizarCampoObservacao);
     dispensarModal.addEventListener('show.bs.modal', function (event) {
         const button = event.relatedTarget;
         
@@ -212,6 +228,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const medNome = button.getAttribute('data-medicamento-nome');
         const quantidade = button.getAttribute('data-quantidade');
         dispensarModal.querySelector('form').reset();
+        atualizarCampoObservacao();
 
         dispensarModal.querySelector('#disp_equivalencia_pendente').hidden = button.dataset.exigeEquivalencia !== '1';
         const unidadeDose = button.getAttribute('data-unidade-dose');

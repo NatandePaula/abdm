@@ -18,7 +18,7 @@ require_once __DIR__ . '/caminhos.php';
 date_default_timezone_set('America/Sao_Paulo');
 
 // Limite de inatividade e antecedência do aviso, em segundos.
-const TEMPO_LIMITE_INATIVIDADE = 9000;
+const TEMPO_LIMITE_INATIVIDADE = 900;
 const TEMPO_AVISO_PREVIO = 300;
 
 $config ??= is_file(__DIR__ . '/config.local.php') ? require __DIR__ . '/config.local.php' : [];
